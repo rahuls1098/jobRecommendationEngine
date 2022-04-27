@@ -4,6 +4,7 @@ from findBestFittingJobs import findBestFittingJobs
 from findEmployeesJobSearch import findEmployeesJobSearch
 from findJobsConnectionHistory import findJobsConnectionHistory
 from viewHighJobHoldingEmployeeConnections import viewHighJobHoldingEmployeeConnections
+from SimilarEmployeesJobRecommendation import SimilarEmployeesJobRecommendation
 import os
 
 # Properties of jobs and employees used as keys for Neo4j node objects returned
@@ -96,18 +97,19 @@ def main():
 		"(2) Find employees to work with on the job search\n" + 
 		"(3) Find jobs based on my connections' job histories\n" +
 		"(4) View the employees connected to those at the most popular jobs\n\n" + 
-		"(5) Restart\n")
+	        "(5) Find jobs that have been applied by Top 10 similar employees based on profiles\n" +
+		"(6) Restart\n")
 
-	# Take in a number 0-5 representing exiting an application or a Cypher query
+	# Take in a number 0-6 representing exiting an application or a Cypher query
 	while(not actionValidated):
 		try:
-			numAction = input("Please enter a number (0-5): ")
+			numAction = input("Please enter a number (0-6): ")
 			numAction = int(numAction)
 			if(not isinstance(int(numAction), int)):
 				print("Please enter a number")
 			else:
-				if(numAction > 5 or numAction < 0):
-					print("Please enter a number 0-5\n")
+				if(numAction > 6 or numAction < 0):
+					print("Please enter a number 0-6\n")
 				elif(numAction == 0):
 					print(exitMsg);
 					actionValidated = True
@@ -125,10 +127,13 @@ def main():
 					viewHighJobHoldingEmployeeConnections(driver)
 					actionValidated = True
 				elif(numAction == 5):
+					SimilarEmployeesJobRecommendation(driver, employeeID)
+					actionValidated = True
+				elif(numAction == 6):
 					main()
 					actionValidated = True
 				else:
-					print("Please enter a number 0-5\n")
+					print("Please enter a number 0-6\n")
 					actionValidated = True
 		except Exception as e:
 			print(e)

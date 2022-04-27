@@ -96,8 +96,8 @@ def main():
 		"(1) Find jobs that best fit my profile\n" + 
 		"(2) Find employees to work with on the job search\n" + 
 		"(3) Find jobs based on my connections' job histories\n" +
-		"(4) View the employees connected to those at the most popular jobs\n\n" + 
-	        "(5) Find jobs that have been applied by Top 10 similar employees based on profiles\n" +
+		"(4) View the employees connected to those at the most popular jobs\n" + 
+	        "(5) Find jobs that have been applied by Top 10 similar employees based on profiles\n\n" +
 		"(6) Restart\n")
 
 	# Take in a number 0-6 representing exiting an application or a Cypher query

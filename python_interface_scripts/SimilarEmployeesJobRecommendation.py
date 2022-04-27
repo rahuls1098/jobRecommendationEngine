@@ -26,7 +26,7 @@ def line_separator(mark, count):
 
 
 # Function to retrieve jobs applied by Top 10 similar employees based on profiles
-def getAppliedJobsOfTop10SimilarEmplyees(tx,employeeID):
+def getAppliedJobsOfTop10SimilarEmplyees(tx,employeeID, numJobs):
 
     # create a list to record all the recommended jobs
 	jobs = []
@@ -43,9 +43,9 @@ def getAppliedJobsOfTop10SimilarEmplyees(tx,employeeID):
                 }
                 match (e:Employee)-[r:APPLIED_TO]->(j:Job)
                 where e in similarEmployee and not j in appliedjobs
-                return j
+                return j as jobs LIMIT $numJobs
 			'''
-			, employeeID = employeeID)
+			, employeeID = employeeID, numJobs = numJobs)
     
     # each job node returned from the driver is restructured as a dictionary,where the keys are this job node's properties and values
     # are the corresponding values of job properties
@@ -60,29 +60,29 @@ def getAppliedJobsOfTop10SimilarEmplyees(tx,employeeID):
 # Match jobs applied by top 10 most similarest employees based on their profiles
 # Allows user to input their employee ID number
 def SimilarEmployeesJobRecommendation(driver, employeeID):
-	employeeIDValidated = False
+	numJobValidated = False
 	print(line_separator("~", 65) + "\n\nLet's show you some jobs applied by the employees with the most similar profiles, employee " + str(employeeID) + ".\n")
 	
 
 	# Validate employee ID input
-	while(not employeeIDValidated):
+	while(not numJobValidated):
 		try:
-			employeeID = input("(0) Main Menu\n\n" + 
-						"Enter one employee ID to get jobs that have been applied by your most similar employees: ")
-
-			if(not isinstance(employeeID, int)):
-				print("Please enter a integer\n")
+			numJobs = input("(0) Main Menu\n\n" + 
+						"Enter the number of jobs to return (1-20): ")
+			numJobs = int(numJobs)
+			if(not isinstance(numJobs, int)):
+				print("Please enter a number\n")
 			else:
-				if(employeeID < 1 or employeeID > 500):
-					print("Please enter an ID 1-500\n")
-# 				elif(percentage == 0):
-# 					job_recommendation_engine_interface.main();
-# 					percentageValidated = True
+				if(numJobs > 20 or numJobs < 0):
+					print("Please enter a number 1-20\n")
+				elif(numJobs == 0):
+					job_recommendation_engine_interface.main();
+					numJobValidated = True
 				else:
 			
 					# Call the function to get jobs
 					with driver.session() as session:
-						result = session.read_transaction(getAppliedJobsOfTop10SimilarEmplyees, employeeID)
+						result = session.read_transaction(getAppliedJobsOfTop10SimilarEmplyees, employeeID, numJobs)
 						print(line_separator("~", 65))
 
 						if(len(result) == 0):
@@ -93,7 +93,7 @@ def SimilarEmployeesJobRecommendation(driver, employeeID):
 								for jobProperty in jobProperties:
 									print(jobProperty + ": " + str(record.get(jobProperty)))
 					driver.close()
-					employeeIDValidated = True
+					numJobValidated = True
 					print(line_separator("~", 65))
 					restart = input("Main Menu [0] or repeat this search [1]: ")
 					validated = False

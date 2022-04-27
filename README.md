@@ -1,6 +1,8 @@
 # Job Recommendation Engine
 DS 4300 Final Project: Job Recommendation Engine
 
+Rachael Cheung, Sreya Katabathuni, Qi Li, Wanru Shao, Rahul Suryadevara
+
 Application Demo Video: https://www.youtube.com/watch?v=q8XvdC7n5bs
 
 ## Instructions for replicating our project
